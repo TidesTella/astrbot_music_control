@@ -1,0 +1,6 @@
+name: astrbot_music_control                                    # 唯一标识符（不要改）
+display_name: LX音乐联动                                    # 在AstrBot中显示的中文名称
+desc: LX Music（洛雪音乐助手）联动插件，通过 HTTP API + Scheme URL 控制音乐播放器
+version: v0.2
+author: RC-CHN
+repo: https://github.com/RC-CHN/astrbot_music_control

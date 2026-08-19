@@ -1,0 +1,26 @@
+{
+    "music_api": {
+        "description": "🎵 LX Music（洛雪音乐助手）API 连接配置\n需要先在 LX Music 设置中开启「开放 API 服务」才能使用本插件。",
+        "type": "object",
+        "items": {
+            "base_url": {
+                "description": "LX Music API 地址",
+                "type": "string",
+                "hint": "在 LX Music → 设置 → 开放 API 服务 中查看端口号，默认 23330",
+                "default": "http://127.0.0.1:23330"
+            },
+            "api_key": {
+                "description": "API Key（访问密码）",
+                "type": "string",
+                "hint": "如果 LX Music 开放 API 服务设置了访问密码，请填写；未设置则留空",
+                "default": ""
+            },
+            "default_filter": {
+                "description": "状态查询返回的字段",
+                "type": "string",
+                "hint": "一般保持默认即可，无需修改",
+                "default": "status,name,singer,albumName,lyricLineText,duration,progress,playbackRate"
+            }
+        }
+    }
+}
