@@ -1,6 +1,6 @@
 {
     "music_api": {
-        "description": "🎵 LX Music（洛雪音乐助手）API 连接配置\n需要先在 LX Music 设置中开启「开放 API 服务」才能使用本插件。",
+        "description": " LX Music（洛雪音乐助手）API 连接配置\n需要先在 LX Music 设置中开启「开放 API 服务」才能使用本插件。",
         "type": "object",
         "items": {
             "base_url": {
