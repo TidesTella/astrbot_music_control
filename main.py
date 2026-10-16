@@ -16,7 +16,6 @@ class MusicControlPlugin(Star):
         self.session = aiohttp.ClientSession(trust_env=True)
         self.base_url = music_config.get("base_url", "").rstrip('/')
         self.default_filter = music_config.get("default_filter", "status,name,singer,albumName,lyricLineText,duration,progress,playbackRate")
-
     # ================== 核心业务逻辑 ==================
     async def _get_status_text(self) -> str:
         if not self.base_url:
@@ -34,15 +33,15 @@ class MusicControlPlugin(Star):
                 progress_str = f"{int(progress//60)}:{int(progress%60):02d}"
                 duration_str = f"{int(duration//60)}:{int(duration%60):02d}"
                 status_map = {
-                    'playing': '▶️ 正在播放',
-                    'paused': '⏸️ 已暂停',
-                    'stoped': '⏹️ 已停止',
-                    'error': '❌ 错误'
+                    'playing': '正在播放',
+                    'paused': '已暂停',
+                    'stoped': '已停止',
+                    'error': '出现错误'
                 }
                 return (f"{status_map.get(status, status)}\n"
-                        f"🎵 {name} - {singer}\n"
-                        f"⏱️ {progress_str} / {duration_str}\n"
-                        f"🔊 音量: {volume}%")
+                        f"{name} - {singer}\n"
+                        f"{progress_str} / {duration_str}\n"
+                        f"音量: {volume}%")
         except Exception as e:
             logger.error(f"获取状态失败: {e}")
             return f"获取音乐状态失败: {str(e)}"
@@ -60,19 +59,19 @@ class MusicControlPlugin(Star):
         try:
             webbrowser.open(scheme_url)
             if play_later:
-                return f"📋 已将 '{keyword}' 加入稍后播放列表\n（请确保洛雪音乐助手正在运行）"
+                return f"已将 '{keyword}' 加入稍后播放列表\n（请确保洛雪音乐助手正在运行）"
             else:
-                return f"🎵 正在播放: {keyword}\n（如果播放器未响应，请确保洛雪音乐助手已运行并启用 Scheme URL 支持）"
+                return f"正在播放: {keyword}\n（如果播放器未响应，请确保洛雪音乐助手已运行并启用 Scheme URL 支持）"
         except Exception as e:
             logger.error(f"唤起 Scheme URL 失败: {e}")
-            return f"❌ 播放失败: {str(e)}\n请确保洛雪音乐助手正在运行。"
+            return f"播放失败: {str(e)}\n请确保洛雪音乐助手正在运行。"
 
     async def _play(self) -> str:
         if not self.base_url:
             return "错误：音乐API基础URL未配置。"
         try:
             async with self.session.post(f"{self.base_url}/play") as resp:
-                return "✅ 已继续播放" if resp.status == 200 else f"❌ 播放失败 (HTTP {resp.status})"
+                return "已继续播放" if resp.status == 200 else f"播放失败 (HTTP {resp.status})"
         except Exception as e:
             return f"请求失败: {str(e)}"
 
@@ -81,7 +80,7 @@ class MusicControlPlugin(Star):
             return "错误：音乐API基础URL未配置。"
         try:
             async with self.session.post(f"{self.base_url}/pause") as resp:
-                return "⏸️ 已暂停播放" if resp.status == 200 else f"❌ 暂停失败 (HTTP {resp.status})"
+                return "已暂停播放" if resp.status == 200 else f"暂停失败 (HTTP {resp.status})"
         except Exception as e:
             return f"请求失败: {str(e)}"
 
@@ -90,7 +89,7 @@ class MusicControlPlugin(Star):
             return "错误：音乐API基础URL未配置。"
         try:
             async with self.session.post(f"{self.base_url}/skip-next") as resp:
-                return "⏭️ 已切换到下一曲" if resp.status == 200 else f"❌ 切换失败 (HTTP {resp.status})"
+                return "已切换到下一曲" if resp.status == 200 else f"切换失败 (HTTP {resp.status})"
         except Exception as e:
             return f"请求失败: {str(e)}"
 
@@ -99,7 +98,7 @@ class MusicControlPlugin(Star):
             return "错误：音乐API基础URL未配置。"
         try:
             async with self.session.post(f"{self.base_url}/skip-prev") as resp:
-                return "⏮️ 已切换到上一曲" if resp.status == 200 else f"❌ 切换失败 (HTTP {resp.status})"
+                return "已切换到上一曲" if resp.status == 200 else f"切换失败 (HTTP {resp.status})"
         except Exception as e:
             return f"请求失败: {str(e)}"
 
@@ -107,10 +106,10 @@ class MusicControlPlugin(Star):
         if not self.base_url:
             return "错误：音乐API基础URL未配置。"
         if volume < 0 or volume > 100:
-            return "❌ 音量值必须在 1-100 之间"
+            return "音量值必须在 1-100 之间"
         try:
             async with self.session.post(f"{self.base_url}/volume?volume={volume}") as resp:
-                return f"🔊 音量已调整为 {volume}%" if resp.status == 200 else f"❌ 调整失败 (HTTP {resp.status})"
+                return f"音量已调整为 {volume}%" if resp.status == 200 else f"调整失败 (HTTP {resp.status})"
         except Exception as e:
             return f"请求失败: {str(e)}"
 
@@ -118,15 +117,15 @@ class MusicControlPlugin(Star):
         if not self.base_url:
             return "错误：音乐API基础URL未配置。"
         if offset < 0:
-            return "❌ 时间不能为负数"
+            return "时间不能为负数"
         try:
             async with self.session.post(f"{self.base_url}/seek?offset={offset}") as resp:
                 if resp.status == 200:
                     minutes = offset // 60
                     seconds = offset % 60
-                    return f"⏩ 已跳转到 {minutes}分{seconds}秒"
+                    return f"已跳转到 {minutes}分{seconds}秒"
                 else:
-                    return f"❌ 跳转失败 (HTTP {resp.status})"
+                    return f"跳转失败 (HTTP {resp.status})"
         except Exception as e:
             return f"请求失败: {str(e)}"
 
@@ -135,7 +134,7 @@ class MusicControlPlugin(Star):
             return "错误：音乐API基础URL未配置。"
         try:
             async with self.session.post(f"{self.base_url}/collect") as resp:
-                return "❤️ 已收藏当前歌曲" if resp.status == 200 else f"❌ 收藏失败 (HTTP {resp.status})"
+                return "已收藏当前歌曲" if resp.status == 200 else f"收藏失败 (HTTP {resp.status})"
         except Exception as e:
             return f"请求失败: {str(e)}"
 
@@ -144,11 +143,11 @@ class MusicControlPlugin(Star):
             return "错误：音乐API基础URL未配置。"
         try:
             async with self.session.post(f"{self.base_url}/uncollect") as resp:
-                return "💔 已取消收藏" if resp.status == 200 else f"❌ 取消收藏失败 (HTTP {resp.status})"
+                return "已取消收藏" if resp.status == 200 else f"取消收藏失败 (HTTP {resp.status})"
         except Exception as e:
             return f"请求失败: {str(e)}"
 
-    # ================== LLM 工具（AI 调用） ==================
+    # ================== LLM 工具（由AI 调用） ==================
     @filter.llm_tool(name="get_music_status")
     async def get_music_status(self, event: AstrMessageEvent) -> str:
         '''获取当前音乐播放器的状态（歌曲名、艺术家、进度、音量等）'''
@@ -200,10 +199,10 @@ class MusicControlPlugin(Star):
         scheme_url = f"lxmusic://music/search/{encoded_keyword}"
         try:
             webbrowser.open(scheme_url)
-            return f"🔍 已在音乐播放器中搜索: {keyword}\n（请查看洛雪音乐助手窗口）"
+            return f"已在音乐播放器中搜索: {keyword}\n（请查看洛雪音乐助手窗口）"
         except Exception as e:
             logger.error(f"唤起 Scheme URL 搜索失败: {e}")
-            return f"❌ 搜索失败: {str(e)}\n请确保洛雪音乐助手正在运行。"
+            return f"搜索失败: {str(e)}\n请确保洛雪音乐助手正在运行。"
 
     @filter.llm_tool(name="music_search_play")
     async def music_search_play(self, event: AstrMessageEvent, keyword: str) -> str:
@@ -301,10 +300,10 @@ class MusicControlPlugin(Star):
         scheme_url = f"lxmusic://music/search/{encoded_keyword}"
         try:
             webbrowser.open(scheme_url)
-            yield event.plain_result(f"🔍 已在音乐播放器中搜索: {keyword}\n（请查看洛雪音乐助手窗口）")
+            yield event.plain_result(f"已在音乐播放器中搜索: {keyword}\n（请查看洛雪音乐助手窗口）")
         except Exception as e:
             logger.error(f"唤起 Scheme URL 搜索失败: {e}")
-            yield event.plain_result(f"❌ 搜索失败: {str(e)}\n请确保洛雪音乐助手正在运行。")
+            yield event.plain_result(f"搜索失败: {str(e)}\n请确保洛雪音乐助手正在运行。")
 
     @music.command("collect")
     async def collect_cmd(self, event: AstrMessageEvent):
